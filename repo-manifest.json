@@ -1,0 +1,19 @@
+{
+  "repo_name": "web-postapocalypse-site",
+  "domain": "postapocalypse.site",
+  "site_name": "輪郭の後で",
+  "publish_dir": "site/",
+  "version": "v1.4",
+  "contains": [
+    "chapters 1-23",
+    "record fragments 1-7"
+  ],
+  "deploy_workflow": ".github/workflows/deploy.yml",
+  "deploy_mode": "GitHub Actions FTPS dry-run initial",
+  "required_secrets": [
+    "FTP_SERVER",
+    "FTP_USERNAME",
+    "FTP_PASSWORD",
+    "SERVER_DIR"
+  ]
+}

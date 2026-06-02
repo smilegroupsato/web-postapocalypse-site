@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://postapocalypse.site/sitemap.xml
