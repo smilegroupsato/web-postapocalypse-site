@@ -26,3 +26,13 @@ jobs:
           local-dir: ./site/
           server-dir: ${{ secrets.SERVER_DIR }}
           log-level: minimal
+          timeout: 120000
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/*.png
+            **/*.jpg
+            **/*.jpeg
+            **/*.webp
+            **/*.gif
