@@ -31,8 +31,3 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
-            **/*.png
-            **/*.jpg
-            **/*.jpeg
-            **/*.webp
-            **/*.gif
