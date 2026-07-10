@@ -8,6 +8,82 @@ if (btn && nav) {
 }
 
 (() => {
+  const storageKey = 'postapocalypse.readingTextSize';
+  const sizes = [
+    ['small', '小'],
+    ['normal', '標準'],
+    ['large', '大'],
+    ['x-large', '特大']
+  ];
+  const allowed = new Set(sizes.map(([value]) => value));
+  const root = document.documentElement;
+
+  function getSavedSize() {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return allowed.has(saved) ? saved : 'normal';
+    } catch (_) {
+      return 'normal';
+    }
+  }
+
+  function saveSize(size) {
+    try {
+      localStorage.setItem(storageKey, size);
+    } catch (_) {
+      // localStorage can be unavailable in restricted browsing modes.
+    }
+  }
+
+  function applySize(size, shouldSave = true) {
+    const next = allowed.has(size) ? size : 'normal';
+    root.dataset.readingSize = next;
+    document.querySelectorAll('[data-reading-size-value]').forEach((button) => {
+      const selected = button.dataset.readingSizeValue === next;
+      button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+    });
+    if (shouldSave) saveSize(next);
+  }
+
+  applySize(getSavedSize(), false);
+
+  const prose = document.querySelector('.prose');
+  const main = prose ? prose.closest('.main') : null;
+  if (!prose || !main || document.querySelector('[data-reading-size-control]')) return;
+
+  const control = document.createElement('section');
+  control.className = 'reading-text-size';
+  control.dataset.readingSizeControl = 'true';
+  control.setAttribute('aria-label', '本文の文字サイズ');
+
+  const label = document.createElement('span');
+  label.className = 'reading-text-size__label';
+  label.id = 'reading-text-size-label';
+  label.textContent = '文字サイズ：';
+
+  const buttons = document.createElement('div');
+  buttons.className = 'reading-text-size__buttons';
+  buttons.setAttribute('role', 'group');
+  buttons.setAttribute('aria-labelledby', label.id);
+
+  sizes.forEach(([value, text]) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'reading-text-size__button';
+    button.dataset.readingSizeValue = value;
+    button.textContent = text;
+    button.setAttribute('aria-label', `本文の文字サイズを${text}にする`);
+    button.setAttribute('aria-pressed', 'false');
+    button.addEventListener('click', () => applySize(value));
+    buttons.appendChild(button);
+  });
+
+  control.append(label, buttons);
+  main.insertBefore(control, prose);
+  applySize(root.dataset.readingSize || 'normal', false);
+})();
+
+(() => {
   const style = document.createElement('style');
   style.textContent = `
     .chapter-no.has-icon{

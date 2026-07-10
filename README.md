@@ -2,77 +2,78 @@
 
 静的Web公開サイト **輪郭の後で** / `postapocalypse.site` の公開用リポジトリです。
 
-## サイト
+このリポジトリは、公開サイトのHTML/CSS/JavaScriptと、今後の保守・改修に必要なRepository Contextを管理します。
 
-- サイト名：輪郭の後で
-- ドメイン：postapocalypse.site
-- 公開方式：静的HTML
-- 公開サーバ：ロリポップ等
-- デプロイ方式：GitHub Actions から FTPS で自動アップロード
+## Overview
 
-## 現在の公開内容
+- Site: 輪郭の後で
+- Domain: https://postapocalypse.site/
+- Repository: `smilegroupsato/web-postapocalypse-site`
+- Publish directory: `site/`
+- Current format: static HTML
+- Current content: top page, contents page, chapters 1-23, record fragments 1-7
 
-- 第一章〜第二十三章
-- 記録断片一〜七
-- トップページ
-- 目次ページ
+## Public Site
 
-## 運用方針
+公開対象は `site/` 以下の管理ファイルです。
 
-- Notion は内部ノート・研究原本・素材整理の場所として扱う。
-- GitHub はWeb公開用ファイルの正本・履歴管理・自動公開の起点として扱う。
-- 公開ファイルは `site/` 以下に置く。
-- `main` ブランチへ反映された内容を、GitHub Actions 経由で公開サーバへアップロードする。
-- FTPでの手動アップロードは原則行わない。
+`main` ブランチへ反映された内容は、GitHub Actions の `Deploy static site` workflow により、FTP経由で公開サーバへアップロードされます。
 
-## ディレクトリ構成
+FTPでの手動アップロードは標準経路ではありません。
+
+## Current Workflow
+
+標準運用は次の流れです。
 
 ```text
-/
-  README.md
-  site/
-    index.html
-    contents/
-    chapters/
-    fragments/
-    assets/
-    robots.txt
-    sitemap.xml
-  .github/
-    workflows/
-      deploy.yml
+ChatGPT / Codex
+-> GitHub repository
+-> GitHub Actions
+-> public site
 ```
+
+作業前には最新 `main` を pull し、未コミット変更がないことを確認します。force push は使用しません。
+
+## Local Preview
+
+このサイトには現在、ビルド手順やパッケージ依存はありません。
+
+`site/` を静的ファイルとして配信すれば確認できます。簡易確認では `site/index.html` をブラウザで開くこともできますが、相対パスや絶対パスを含む画像確認にはローカルサーバでの確認が望ましいです。
+
+## Documents
+
+- `README.md`: Repositoryの入口。
+- `AGENTS.md`: AIエージェント向け作業指針。
+- `PROJECT.md`: サイト改修の方向性、現在の焦点、未確定事項。
+- `docs/decision-log.md`: 設計判断とOpen Questions。
+- `docs/changelog.md`: サイトとRepository Contextの主要変更履歴。
+- `docs/progress.md`: 作業進捗と次の作業候補。
+- `docs/site-audit.md`: サイト構造と初期監査メモ。
+
+## Maintenance Notes
+
+- 公開ファイルは原則として `site/` 以下に置きます。
+- 共通CSSは `site/assets/css/style.css` です。
+- 共通JavaScriptは `site/assets/js/main.js` です。
+- 見た目やUXに関わる変更は `docs/changelog.md` に記録します。
+- 方向性、構造、文書責務、改修戦略に関わる判断は `docs/decision-log.md` に記録します。
+- 大きな改修前には `PROJECT.md` と `docs/site-audit.md` を確認します。
 
 ## GitHub Secrets
 
-以下のRepository Secretsを設定してください。
+Deploy workflow では以下のRepository Secretsを使用します。
 
-| Secret名 | 内容 |
+| Secret | Purpose |
 |---|---|
-| `FTP_SERVER` | ロリポップ等のFTPS / FTPサーバ名 |
-| `FTP_USERNAME` | FTP / WebDAVアカウント名 |
-| `FTP_PASSWORD` | FTP / WebDAVパスワード |
-| `SERVER_DIR` | 独自ドメインの公開フォルダ |
+| `FTP_SERVER` | FTPサーバ名 |
+| `FTP_USERNAME` | FTPアカウント名 |
+| `FTP_PASSWORD` | FTPパスワード |
+| `SERVER_DIR` | 公開サーバ側ディレクトリ |
 
 秘密情報は、README・HTML・YAML・チャット本文に直接書かないでください。
 
-## 初回デプロイ
+## Open Questions
 
-初回は `.github/workflows/deploy.yml` に `dry-run: true` を入れています。
-
-1. GitHub Secrets を設定する。
-2. GitHub Actions の `Deploy static site` を手動実行する。
-3. ログで転送先と差分を確認する。
-4. 問題なければ `dry-run: true` を削除して commit する。
-5. 再度実行し、本番反映する。
-
-## 更新ルール
-
-ページ追加・修正時は、`site/` 以下のファイルを更新し、内容が分かるcommitメッセージで保存します。
-
-例：
-
-- `Add record fragment pages`
-- `Update table of contents layout`
-- `Revise hero image`
-- `Configure Lolipop deploy workflow`
+- 長期的な編集方針とサイトのデザイン語彙をどう定義するか。
+- 将来的にも静的HTMLを維持するか、生成器やテンプレートを導入するか。
+- 全体改修の優先順位を、本文体験、目次、トップページ、運用性のどこから進めるか。
